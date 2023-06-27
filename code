@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int count_alphabets(const char password[]) {
+    int length = strlen(password);
+    int alphabets = 0;
+
+    for (int i = 0; i < length; i++) {
+        if (isalpha(password[i])) {
+            alphabets++;
+        }
+    }
+
+    return alphabets;
+}
+
+int uppercase_letter(const char password[]) {
+    int length = strlen(password);
+
+    for (int i = 0; i < length; i++) {
+        if (isupper(password[i])) {
+            return 1;  // Uppercase letter found
+        }
+    }
+
+    return 0;  // No uppercase letter found
+}
+
+int lowercase_letter(const char password[]) {
+    int length = strlen(password);
+
+    for (int i = 0; i < length; i++) {
+        if (islower(password[i])) {
+            return 1;  // Lowercase letter found
+        }
+    }
+
+    return 0;  // No lowercase letter found
+}
+
+int digit(const char password[]) {
+    int length = strlen(password);
+
+    for (int i = 0; i < length; i++) {
+        if (isdigit(password[i])) {
+            return 1;  // digit found
+        }
+    }
+
+    return 0;  // No digit found
+}
+
+int special_symbol(const char password[]) {
+    int length = strlen(password);
+
+    for (int i = 0; i < length; i++) {
+        if (!isalnum(password[i])) {
+            return 1;  // Special symbol found
+        }
+    }
+
+    return 0;  // No special symbol found
+}
+
+int password_strength_checker(const char password[]) {
+    int length = strlen(password);
+    int uppercase = uppercase_letter(password);
+    int lowercase = lowercase_letter(password);
+    int digits =digit(password);
+    int special_chars =special_symbol(password);
+    int alphabets = count_alphabets(password);
+
+    if (length < 8 || alphabets < 8 || !(uppercase && lowercase && digits && special_chars)) {
+        return 0;  // Weak password
+    } else {
+        return 1;  // Strong password
+    }
+}
+
+int main() {
+    char password[50];
+
+    printf("Enter your password: ");
+    fgets(password, sizeof(password), stdin);
+    password[strcspn(password, "\n")] = '\0';  // Remove trailing newline character
+
+    int strength = password_strength_checker(password);
+
+    printf("Password strength: ");
+    if (strength == 0) {
+        printf("Weak\n");
+        printf("Please improvement your password \n");
+        if (strlen(password) <8) {
+            printf(" The password must contain at least 8 characters long.\n");
+        }
+        if (count_alphabets(password) < 8){ 
+            printf("The password must contain at least 8 alphabetic characters.\n");
+        }
+        if (!uppercase_letter(password)) {
+            printf("At least one uppercase letter\n");
+        }
+        if (!lowercase_letter(password)) {
+            printf("At least one lowercase letter\n");
+        }
+        if (!digit(password)) {
+            printf("The password must contain at least one digit\n");
+        }
+        if (!special_symbol(password)) {
+            printf("The password must contain at least one special symbol characters.\n");
+    } else {
+        printf("Strong password\n");
+    }
+
+    return 0;
+    }
+}
